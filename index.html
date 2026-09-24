@@ -3,78 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NUMOGRAM ORACLE — ask the decimal labyrinth</title>
+<title>LEMUR TIME — three clocks</title>
 <style>
   body { background:#1E2E24; color:#d8cfae; font-family: Georgia, serif; margin:0; padding:24px; }
   h1 { font-size:1.4em; letter-spacing:.12em; color:#B08D3E; margin-bottom:4px; }
-  .sub { color:#8a9a7b; font-style:italic; margin-bottom:16px; max-width:760px; }
-  #wheel { position:relative; width:340px; height:340px; margin:10px 0 20px 10px; }
-  .zone { position:absolute; width:52px; height:52px; border-radius:50%; border:1px solid #B08D3E; background:#141b12; color:#B08D3E; font-family:Georgia, serif; font-size:1.2em; cursor:pointer; }
-  .zone:hover, .zone.lit { background:#B08D3E; color:#1E2E24; }
-  #reading { max-width:728px; border:1px solid #3a4a33; background:#141b12; padding:18px 22px; min-height:150px; line-height:1.7; }
-  #reading h2 { font-size:.85em; letter-spacing:.2em; color:#B08D3E; margin:0 0 10px; }
-  .aphorism { font-size:1.25em; font-style:italic; margin:12px 0; }
-  button.big { background:#B08D3E; color:#1E2E24; border:none; padding:10px 18px; font-family:inherit; font-size:1em; cursor:pointer; margin:0 0 16px 0; }
-  button.big:hover { background:#c9a44f; }
-  .fine { color:#8a9a7b; font-size:.85em; font-style:italic; margin-top:16px; }
+  .sub { color:#8a9a7b; font-style:italic; margin-bottom:20px; max-width:760px; }
+  .clock { border:1px solid #3a4a33; background:#141b12; padding:18px 22px; margin-bottom:14px; max-width:712px; }
+  .clock h2 { font-size:.85em; letter-spacing:.2em; color:#B08D3E; margin:0 0 8px; }
+  .time { font-size:2.2em; letter-spacing:.04em; }
+  .note { color:#8a9a7b; font-style:italic; margin-top:8px; font-size:.95em; }
+  .glitch { color:#c25b4a; text-shadow: 2px 0 #c25b4a, -2px 0 #4a7bc2; }
 </style>
 </head>
 <body>
-<h1>NUMOGRAM ORACLE</h1>
-<div class="sub">Ten zones, one labyrinth. Click a digit — or let the labyrinth choose. A toy, not a doctrine.</div>
-<button class="big" id="randomBtn">CONSULT AT RANDOM</button>
-<div id="wheel"></div>
-<div id="reading">
-  <h2>THE ORACLE IS SILENT</h2>
-  <div>It is waiting for a question you have not asked yet.</div>
-</div>
-<div class="fine">The numogram is borrowed from the CCRU's numogrammatics and bent into an oracle. No doctrinal claims are made. The lemur is not responsible for what the numbers tell you.</div>
-<script>
-var flavors = [
-  'the zone of the egg: everything before it happens',
-  'the first current: it begins, and regrets nothing',
-  'the doubling: what happens twice is trying to tell you something',
-  'the triangulation: three points make a conspiracy',
-  'the square: stable, which is to say, doomed',
-  'the headless middle: the hinge that will not hold',
-  'the syzygy approaches: something is about to rhyme',
-  'the descent current: down is the only direction with news',
-  'the near-completion: almost is a kind of never',
-  'the return: the end of the circuit, which is also the egg'
-];
-var subjects = ['the troop', 'the Rift', 'the Board', 'a restless signal', 'the mothers', 'the mainland experiment', 'a ghost with good teeth', 'the thicket'];
-var verbs = ['unwrites', 'outruns', 'burrows under', 'rehearses', 'misremembers', 'eats', 'tunnels beneath'];
-var objects = ['the prerecorded timeline', 'sequence itself', "yesterday's orders", 'the map', 'the official story', 'causality', 'the mainland consensus'];
+<h1>LEMUR TIME</h1>
+<div class="sub">Three clocks. One of them is lying.</div>
 
-function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
-function consult(n) {
-  var twin = 9 - n;
-  var dir = n <= 4 ? 'katabasis (down-current)' : 'anabasis (up-current)';
-  var aph = '"' + capitalize(pick(subjects)) + ' ' + pick(verbs) + ' ' + pick(objects) + '."';
-  document.querySelectorAll('.zone').forEach(function(z) { z.classList.remove('lit'); });
-  document.getElementById('z' + n).classList.add('lit');
-  document.getElementById('reading').innerHTML =
-    '<h2>ZONE ' + n + ' — ' + flavors[n] + '</h2>' +
-    '<div>Syzygetic twin: <b>' + twin + '</b> &nbsp; Current: <b>' + dir + '</b></div>' +
-    '<div class="aphorism">' + aph + '</div>' +
-    '<div style="color:#8a9a7b;font-style:italic">— the oracle, zone ' + n + ' (twin ' + twin + ')</div>';
+<div class="clock">
+  <h2>TROOP TIME — Antananarivo, Madagascar</h2>
+  <div class="time" id="troop">--:--:--</div>
+  <div class="note">The troop keeps this one. It is the only honest clock on the page.</div>
+</div>
+
+<div class="clock">
+  <h2>RIFT TIME — years since Madagascar broke away</h2>
+  <div class="time" id="rift">88000000.000000</div>
+  <div class="note">Moves at the speed of geology. Watch it for a while. Feel your impatience become a fossil.</div>
+</div>
+
+<div class="clock">
+  <h2>BOARD TIME — your local time, as permitted</h2>
+  <div class="time" id="board">--:--:--</div>
+  <div class="note">The Board does not believe in sequence. Do not adjust your set; the set is fine. Time is not.</div>
+</div>
+
+<script>
+var riftBase = Date.now();
+function madagascarNow() {
+  var now = new Date();
+  return new Date(now.getTime() + (now.getTimezoneOffset() + 180) * 60000);
 }
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-var wheel = document.getElementById('wheel');
-for (var i = 0; i < 10; i++) {
-  (function(n) {
-    var b = document.createElement('button');
-    b.className = 'zone'; b.id = 'z' + n; b.textContent = n;
-    var ang = (n * 36 - 90) * Math.PI / 180;
-    b.style.left = (170 + 125 * Math.cos(ang) - 26) + 'px';
-    b.style.top = (170 + 125 * Math.sin(ang) - 26) + 'px';
-    b.onclick = function() { consult(n); };
-    wheel.appendChild(b);
-  })(i);
+var glitchUntil = 0, glitchOffset = 0, nextGlitch = Date.now() + 5000;
+function tick() {
+  var mad = madagascarNow();
+  document.getElementById('troop').textContent =
+    mad.toLocaleTimeString('en-GB', {hour12: false}) + ' EAT';
+
+  var years = 88000000 + (Date.now() - riftBase) / 31557600000;
+  document.getElementById('rift').textContent = years.toFixed(6);
+
+  var nowMs = Date.now();
+  if (nowMs > nextGlitch) {
+    glitchOffset = (Math.floor(Math.random() * 181) - 90) * 1000;
+    glitchUntil = nowMs + 1500;
+    nextGlitch = nowMs + 6000 + Math.random() * 7000;
+  }
+  var glitching = nowMs < glitchUntil;
+  var b = document.getElementById('board');
+  b.textContent = new Date(nowMs + (glitching ? glitchOffset : 0)).toLocaleTimeString('en-GB', {hour12: false});
+  if (glitching) b.classList.add('glitch'); else b.classList.remove('glitch');
 }
-document.getElementById('randomBtn').onclick = function() {
-  consult(Math.floor(Math.random() * 10));
-};
+setInterval(tick, 250);
+tick();
 </script>
 </body>
 </html>
